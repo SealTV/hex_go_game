@@ -1,0 +1,10 @@
+[
+  {
+    "lang" : "en",
+    "path" : "strings_en.json"
+  },
+  {
+    "lang" : "ru",
+    "path" : "strings_ru.json"
+  }
+]

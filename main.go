@@ -8,13 +8,17 @@ import (
 
 func main() {
 	dirPath := "./data/sprites"
-	sprites, err := resources.LoadAllSpritesInDirrectory(dirPath)
+	localizationPath := "./data/localization"
+	sMap := make(resources.SpriteMap)
+	err := sMap.Init(dirPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for _, s := range sprites {
-		fmt.Println(s.Name)
-	}
-
+	var localizator resources.Localizator
+	localizator.Init(localizationPath, resources.En)
+	fmt.Println(localizator.GetString("AppTitle"))
+	localizator.SetLang(resources.Ru)
+	fmt.Println(localizator.GetString("AppTitle"))
+	fmt.Println(localizator.GetString("asd"))
 }
