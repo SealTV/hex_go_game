@@ -1,0 +1,16 @@
+{
+  "name": "AppTitle",
+  "version": "0.0.1",
+  "screen_w": 680,
+  "screen_h": 480,
+  "vsync": true,
+  "localization_path": "./data/localization",
+  "sprites_path": "./data/sprites",
+  "fonts_path": "./data/fonts",
+  "spritesheets": [
+    {
+      "data_file": "./data/spritesheets/game.json",
+      "image_file": "./data/spritesheets/game.png"
+    }
+  ]
+}

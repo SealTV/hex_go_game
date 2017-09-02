@@ -1,47 +1,45 @@
 package resources
 
 import (
-	"encoding/json"
 	"fmt"
+
 	"github.com/faiface/pixel"
+	_ "github.com/faiface/pixel/pixelgl"
+	_ "golang.org/x/image/colornames"
+
 	"image"
 	_ "image/png"
 	"io/ioutil"
 	"os"
 )
 
-type SpriteMap map[string]*Sprite
+type SpriteMap map[string]pixel.Picture
 
 type Sprite struct {
 	Name    string        `json:"name"`
 	Picture pixel.Picture `json:"picture"`
 }
 
-func (smap *SpriteMap) Init(path string) error {
+func (smap SpriteMap) Init(path string) error {
 	sprites, err := LoadAllSpritesInDirectory(path, "")
 	if err != nil {
 		return err
 	}
 
 	for _, s := range sprites {
-		(*smap)[s.Name] = &s
+		smap[s.Name] = s.Picture
 	}
 
 	return nil
 }
 
-func (smap *SpriteMap) GetSprite(name string) *Sprite {
-	s, b := (*smap)[name]
+func (smap SpriteMap) GetSprite(name string) pixel.Picture {
+	s, b := smap[name]
 	if !b {
 		return nil
 	}
 
 	return s
-}
-
-func (smap *SpriteMap) ToJsonString() string {
-	mapB, _ := json.MarshalIndent(smap, "", " ")
-	return string(mapB)
 }
 
 func LoadAllSpritesInDirectory(path, prefix string) ([]Sprite, error) {
@@ -53,7 +51,7 @@ func LoadAllSpritesInDirectory(path, prefix string) ([]Sprite, error) {
 	for _, f := range files {
 		p := fmt.Sprintf("%s/%s", path, f.Name())
 		if f.IsDir() {
-			sprites, err := LoadAllSpritesInDirectory(p, prefix+f.Name())
+			sprites, err := LoadAllSpritesInDirectory(p, fmt.Sprintf("%s/%s", prefix, f.Name()))
 			if err != nil {
 				return nil, err
 			}
@@ -64,7 +62,7 @@ func LoadAllSpritesInDirectory(path, prefix string) ([]Sprite, error) {
 				return nil, err
 			}
 
-			sprite := Sprite{prefix + f.Name(), pic}
+			sprite := Sprite{fmt.Sprintf("%s/%s", prefix, f.Name()), pic}
 			result = append(result, sprite)
 		}
 	}
@@ -81,6 +79,5 @@ func loadPicture(path string) (pixel.Picture, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return pixel.PictureDataFromImage(img), nil
 }
